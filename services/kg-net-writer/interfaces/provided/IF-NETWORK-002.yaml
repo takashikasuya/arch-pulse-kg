@@ -1,0 +1,13 @@
+# IF-NETWORK-002 — NetworkOverlay SPARQLエンドポイント（JWT認証トポロジー問い合わせ）
+# 正本: building-os-ecosystem/interfaces/interfaces.yaml
+# このファイルは CS 固有の実装メモを記載する
+
+interface_id: IF-NETWORK-002
+name: "NetworkOverlay SPARQLエンドポイント（JWT認証トポロジー問い合わせ）"
+direction: provided
+transport: http
+schema_ref: "interfaces/IF-NETWORK-002/sparql-endpoint.yaml"
+
+# CS 固有の実装メモ:
+implementation_notes: ""
+local_endpoint: ""

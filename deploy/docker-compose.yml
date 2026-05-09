@@ -1,0 +1,38 @@
+# REPO-ARCH-PULSE-KG — ローカル開発用 docker-compose
+# 全 CS（contains_systems）の container をまとめて起動する
+# 詳細な依存関係・ポート・環境変数は各 CS の README を参照
+
+version: "3.9"
+
+services:
+  kg-store:
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-store:${VERSION:-dev}
+    # build: services/kg-store     # ローカルビルド時に有効化
+    # depends_on: []
+    # ports: []
+    # environment: {}
+  kg-geom:
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-geom:${VERSION:-dev}
+    # build: services/kg-geom     # ローカルビルド時に有効化
+    # depends_on: []
+    # ports: []
+    # environment: {}
+  kg-bim-loader:
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-bim-loader:${VERSION:-dev}
+    # build: services/kg-bim-loader     # ローカルビルド時に有効化
+    # depends_on: []
+    # ports: []
+    # environment: {}
+  kg-net-writer:
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-net-writer:${VERSION:-dev}
+    # build: services/kg-net-writer     # ローカルビルド時に有効化
+    # depends_on: []
+    # ports: []
+    # environment: {}
+  ai-graphrag:
+    image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag:${VERSION:-dev}
+    # build: services/graphrag     # ローカルビルド時に有効化
+    # depends_on: []
+    # ports: []
+    # environment: {}
+

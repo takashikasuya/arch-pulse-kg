@@ -1,0 +1,8 @@
+# 親 repo から割り当てられた上位要求 (編集不可 — 親 repo が正本)
+upstream_requirements:
+  - id: REQ-SOS-001
+    title: "リアルタイム異常検知レイテンシ p99 100ms 以下"
+    statement: >
+      システムは、センサ計測値がブローカーに到着してから SpatialContextGrainの異常フラグが更新されるまでのエンドツーエンドレイテンシを、 p99で100ms以内に抑えなければならない。
+    status: approved
+

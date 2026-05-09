@@ -1,0 +1,11 @@
+# コントラクトテスト: IF-KG-002
+
+- id: TC-CONTRACT-IF-KG-002-001
+  title: IF-KG-002 メッセージスキーマ検証
+  verifies:
+  - IF-KG-002
+  type: contract
+  run:
+    command: pytest tests/contract/test_if_kg_002.py
+  evidence:
+    output: evidence/TC-CONTRACT-IF-KG-002-001.json

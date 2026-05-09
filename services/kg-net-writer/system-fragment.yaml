@@ -1,0 +1,26 @@
+# system-fragment.yaml — 親 repo への参照・CS 宣言
+# 自動生成: tools/generate_repo.py
+
+id: CS-KG-NET-WRITER
+name: NetworkOverlay（SNMP/LLDP 収集・Jena TDB2 管理・SPARQL 提供）
+parent_architecture_repo:
+  url: https://github.com/takashikasuya/building-os-ecosystem
+  revision: main
+part_of_soi:
+- SOI-NETWORK
+implements:
+  requirements:
+  - REQ-SOS-001
+  functions:
+  - FUN-NETWORK-001
+interfaces:
+  provides:
+  - IF-NETWORK-002
+  consumes:
+  - IF-NETWORK-001
+  - IF-KG-001
+stack: java
+runtime: service
+adr_ref:
+- ADR-002
+- ADR-011

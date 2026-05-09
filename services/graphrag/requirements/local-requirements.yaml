@@ -1,0 +1,12 @@
+# この CS 固有の詳細要求
+# upstream-requirements.yaml の上位要求を詳細化・追加する
+# id 命名規則: REQ-AI-GRAPHRAG-NNN
+
+local_requirements:
+  - id: REQ-AI-GRAPHRAG-001
+    title: "(詳細要求タイトルを記入)"
+    statement: >
+      (詳細要求を記入)
+    refines: []         # 上位要求 ID を記入
+    priority: must
+    status: draft

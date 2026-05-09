@@ -1,0 +1,13 @@
+# IF-GOVERN-002 — GovernanceGrain AccessDecision API（Orleans Grainメソッド呼び出し）
+# 正本: building-os-ecosystem/interfaces/interfaces.yaml
+# このファイルは CS 固有の実装メモを記載する
+
+interface_id: IF-GOVERN-002
+name: "GovernanceGrain AccessDecision API（Orleans Grainメソッド呼び出し）"
+direction: consumed
+transport: grpc
+schema_ref: ""
+
+# CS 固有の実装メモ:
+implementation_notes: ""
+local_endpoint: ""

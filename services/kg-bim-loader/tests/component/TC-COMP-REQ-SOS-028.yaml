@@ -1,0 +1,15 @@
+# コンポーネントテスト: REQ-SOS-028
+
+- id: TC-COMP-KG-BIM-LOADER-002
+  title: REQ-SOS-028 実装検証
+  verifies:
+  - REQ-SOS-028
+  - FUN-BIR-001
+  - FUN-BIR-002
+  - FUN-BIR-003
+  - FUN-BIR-004
+  type: component
+  run:
+    command: pytest tests/component/
+  evidence:
+    output: evidence/TC-COMP-KG-BIM-LOADER-002.json

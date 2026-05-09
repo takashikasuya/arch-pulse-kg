@@ -1,0 +1,32 @@
+# system-fragment.yaml — 親 repo への参照・CS 宣言
+# 自動生成: tools/generate_repo.py
+
+id: CS-KG-STORE
+name: Knowledge Graph Store（統合 KG・SPARQL endpoint・Dataspace 接続点）
+parent_architecture_repo:
+  url: https://github.com/takashikasuya/building-os-ecosystem
+  revision: main
+part_of_soi:
+- SOI-KG
+implements:
+  requirements:
+  - REQ-SOS-002
+  - REQ-SOS-028
+  - REQ-SOS-032
+  functions:
+  - FUN-BIR-003
+  - FUN-KG-001
+  - FUN-KG-002
+  - FUN-BIR-004
+interfaces:
+  provides:
+  - IF-KG-001
+  consumes: []
+stack: java
+runtime: service
+adr_ref:
+- ADR-002
+- ADR-006
+- ADR-007
+- ADR-008
+- ADR-011

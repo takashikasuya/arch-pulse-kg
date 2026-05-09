@@ -1,0 +1,13 @@
+# IF-NETWORK-001 — SNMP/LLDP収集インターフェース（物理ネットワーク→NetworkOverlay）
+# 正本: building-os-ecosystem/interfaces/interfaces.yaml
+# このファイルは CS 固有の実装メモを記載する
+
+interface_id: IF-NETWORK-001
+name: "SNMP/LLDP収集インターフェース（物理ネットワーク→NetworkOverlay）"
+direction: consumed
+transport: snmp
+schema_ref: ""
+
+# CS 固有の実装メモ:
+implementation_notes: ""
+local_endpoint: ""

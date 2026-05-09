@@ -1,0 +1,13 @@
+# IF-KG-002 — Geometry Payload REST（urn:bir:geometry:{uuid} 解決）
+# 正本: building-os-ecosystem/interfaces/interfaces.yaml
+# このファイルは CS 固有の実装メモを記載する
+
+interface_id: IF-KG-002
+name: "Geometry Payload REST（urn:bir:geometry:{uuid} 解決）"
+direction: provided
+transport: http
+schema_ref: "interfaces/IF-KG-002/geometry.openapi.yaml"
+
+# CS 固有の実装メモ:
+implementation_notes: ""
+local_endpoint: ""

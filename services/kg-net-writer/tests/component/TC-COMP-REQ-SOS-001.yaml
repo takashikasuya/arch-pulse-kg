@@ -1,0 +1,12 @@
+# コンポーネントテスト: REQ-SOS-001
+
+- id: TC-COMP-KG-NET-WRITER-001
+  title: REQ-SOS-001 実装検証
+  verifies:
+  - REQ-SOS-001
+  - FUN-NETWORK-001
+  type: component
+  run:
+    command: pytest tests/component/
+  evidence:
+    output: evidence/TC-COMP-KG-NET-WRITER-001.json

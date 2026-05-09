@@ -1,0 +1,13 @@
+# コンポーネントテスト: REQ-SOS-022
+
+- id: TC-COMP-AI-GRAPHRAG-001
+  title: REQ-SOS-022 実装検証
+  verifies:
+  - REQ-SOS-022
+  - FUN-ENERGY-002
+  - FUN-ENERGY-003
+  type: component
+  run:
+    command: pytest tests/component/
+  evidence:
+    output: evidence/TC-COMP-AI-GRAPHRAG-001.json

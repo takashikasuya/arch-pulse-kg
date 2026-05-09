@@ -1,0 +1,20 @@
+# 親 repo から割り当てられた上位要求 (編集不可 — 親 repo が正本)
+upstream_requirements:
+  - id: REQ-SOS-002
+    title: "PIIおよびWearableデータクラスの施設内所在をミドルウェア層で強制"
+    statement: >
+      ウェアラブル生体データ・位置ビーコンデータを含むPIIおよびWearableデータクラスのデータは、 いかなる状況においても施設外（クラウドを含む外部ネットワーク）に転送されてはならない。 この制約はGovernanceGrainによりミドルウェア層でアーキテクチャ的に強制されなければならず、 アプリケーション開発者の実装判断に委ねてはならない。
+    status: approved
+
+  - id: REQ-SOS-028
+    title: "bir_id を全システム横断の不変識別子として強制"
+    statement: >
+      建物の全空間・設備・センサ・アクチュエータは bir_id（URN形式の不変ID）で 参照されなければならない。bir_id は IFC GUID / Revit ElementID / EnergyPlus Zone / 223P PhysicalSpace URI / BAS Point ID prefix / Brick エンティティ URI への双方向マッピングを CS-KG-STORE で保持する。 CS-EA-DEVICE / CS-EA-SPACE 等の Grain 主キー、シミュレーション結果の パラメータ参照、制御記述の Sensor/Actuator URI、ロボットマップの 区画 ID はすべて bir_id 経由で解決されなければならない。
+    status: approved
+
+  - id: REQ-SOS-032
+    title: "BIR 変更時の差分検出と派生モデル再生成・古い派生モデル参照の拒否"
+    statement: >
+      CS-KG-STORE / CS-KG-GEOM の BIR が更新された場合、CS-KG-BIM-LOADER は 差分検出（追加・変更・削除されたエンティティの bir_id リスト）を生成し、 影響を受ける派生モデル（EnergyPlus IDF・RC 状態空間・OpenFOAM ケース・ NavMesh・OccupancyGrid・ナビポイントカタログ）の再生成を CS-SM-* / CS-AN-NAV-PLANNER にトリガーしなければならない。 古い派生モデル（ModelVersion < 現行 BIR Version）を参照する 制御アクション・最適化リクエストは PEP-ACTOR / PEP-PHY で拒否される。
+    status: approved
+

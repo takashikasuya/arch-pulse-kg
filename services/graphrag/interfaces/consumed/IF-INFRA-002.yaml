@@ -1,0 +1,13 @@
+# IF-INFRA-002 — Telemetry Time-series DB Query API（TimescaleDB）
+# 正本: building-os-ecosystem/interfaces/interfaces.yaml
+# このファイルは CS 固有の実装メモを記載する
+
+interface_id: IF-INFRA-002
+name: "Telemetry Time-series DB Query API（TimescaleDB）"
+direction: consumed
+transport: http
+schema_ref: "interfaces/IF-INFRA-002/timescale-api.openapi.yaml"
+
+# CS 固有の実装メモ:
+implementation_notes: ""
+local_endpoint: ""

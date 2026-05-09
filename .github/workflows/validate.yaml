@@ -1,0 +1,46 @@
+# REPO-ARCH-PULSE-KG — mono-repo CI
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  # 全 CS のトレーサビリティ検証（matrix）
+  validate-trace:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cs_path:
+          - services/kg-store
+          - services/kg-geom
+          - services/kg-bim-loader
+          - services/kg-net-writer
+          - services/graphrag
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout parent architecture repo
+        uses: actions/checkout@v4
+        with:
+          repository: takashikasuya/building-os-ecosystem
+          path: _architecture
+      - name: Install Python deps
+        run: pip install pyyaml
+      - name: Validate traceability for ${{ matrix.cs_path }}
+        run: |
+          python _architecture/tools/validate_trace.py \
+            --parent _architecture \
+            --local ${{ matrix.cs_path }}
+
+  # スタック固有のビルド・テスト（プレースホルダ）
+  build-and-test:
+    runs-on: ubuntu-latest
+    needs: validate-trace
+    steps:
+      - uses: actions/checkout@v4
+      # スタック固有手順を追記する：
+      # - .NET: dotnet build / dotnet test
+      # - Python: pytest
+      # - TypeScript: npm test
+      # - Java: ./gradlew build

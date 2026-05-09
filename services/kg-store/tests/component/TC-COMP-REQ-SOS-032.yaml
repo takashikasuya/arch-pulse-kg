@@ -1,0 +1,15 @@
+# コンポーネントテスト: REQ-SOS-032
+
+- id: TC-COMP-KG-STORE-003
+  title: REQ-SOS-032 実装検証
+  verifies:
+  - REQ-SOS-032
+  - FUN-BIR-003
+  - FUN-KG-001
+  - FUN-KG-002
+  - FUN-BIR-004
+  type: component
+  run:
+    command: pytest tests/component/
+  evidence:
+    output: evidence/TC-COMP-KG-STORE-003.json

@@ -1,0 +1,13 @@
+# IF-AI-002 — IAIAnalystGrain Orleansインターフェース（ローカル/クラウドLLM抽象化）
+# 正本: building-os-ecosystem/interfaces/interfaces.yaml
+# このファイルは CS 固有の実装メモを記載する
+
+interface_id: IF-AI-002
+name: "IAIAnalystGrain Orleansインターフェース（ローカル/クラウドLLM抽象化）"
+direction: consumed
+transport: grpc
+schema_ref: ""
+
+# CS 固有の実装メモ:
+implementation_notes: ""
+local_endpoint: ""
