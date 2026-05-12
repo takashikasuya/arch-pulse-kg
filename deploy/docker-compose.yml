@@ -1,38 +1,76 @@
-# REPO-ARCH-PULSE-KG — ローカル開発用 docker-compose
-# 全 CS（contains_systems）の container をまとめて起動する
-# 詳細な依存関係・ポート・環境変数は各 CS の README を参照
+# arch-pulse-kg — local development docker-compose
+# Oxigraph runs as a dedicated container so Python↔Oxigraph HTTP boundary
+# is established from day 1 (future split costs zero code change).
 
 version: "3.9"
 
 services:
+
+  # ── KG-STORE (Python/FastAPI) ─────────────────────────────────────────────
   kg-store:
     image: ghcr.io/takashikasuya/arch-pulse-kg/kg-store:${VERSION:-dev}
-    # build: services/kg-store     # ローカルビルド時に有効化
-    # depends_on: []
-    # ports: []
-    # environment: {}
+    build: ../services/kg-store
+    ports:
+      - "8080:8080"
+    environment:
+      SPARQL_ENDPOINT: "http://kg-store-oxigraph:7878"
+      NATS_URL: "nats://nats:4222"
+      NATS_STREAM: "bldg"
+      LOG_LEVEL: "INFO"
+    depends_on:
+      kg-store-oxigraph:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Oxigraph (RDF triplestore) ────────────────────────────────────────────
+  kg-store-oxigraph:
+    image: oxigraph/oxigraph:latest
+    volumes:
+      - oxigraph-data:/data
+    command: serve --location /data --bind 0.0.0.0:7878
+    ports:
+      - "7878:7878"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7878/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── NATS JetStream ────────────────────────────────────────────────────────
+  nats:
+    image: nats:2.10
+    command: ["--js", "--sd", "/data"]
+    ports:
+      - "4222:4222"
+    volumes:
+      - nats-data:/data
+
+  # ── KG-GEOM ───────────────────────────────────────────────────────────────
   kg-geom:
     image: ghcr.io/takashikasuya/arch-pulse-kg/kg-geom:${VERSION:-dev}
-    # build: services/kg-geom     # ローカルビルド時に有効化
-    # depends_on: []
-    # ports: []
-    # environment: {}
+    # build: ../services/kg-geom
+
+  # ── KG-BIM-LOADER ─────────────────────────────────────────────────────────
   kg-bim-loader:
     image: ghcr.io/takashikasuya/arch-pulse-kg/kg-bim-loader:${VERSION:-dev}
-    # build: services/kg-bim-loader     # ローカルビルド時に有効化
-    # depends_on: []
-    # ports: []
-    # environment: {}
+    # build: ../services/kg-bim-loader
+
+  # ── KG-NET-WRITER ─────────────────────────────────────────────────────────
   kg-net-writer:
     image: ghcr.io/takashikasuya/arch-pulse-kg/kg-net-writer:${VERSION:-dev}
-    # build: services/kg-net-writer     # ローカルビルド時に有効化
-    # depends_on: []
-    # ports: []
-    # environment: {}
+    # build: ../services/kg-net-writer
+
+  # ── AI-GRAPHRAG ───────────────────────────────────────────────────────────
   ai-graphrag:
     image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag:${VERSION:-dev}
-    # build: services/graphrag     # ローカルビルド時に有効化
-    # depends_on: []
-    # ports: []
-    # environment: {}
+    # build: ../services/graphrag
 
+volumes:
+  oxigraph-data:
+  nats-data:
