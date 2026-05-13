@@ -52,7 +52,8 @@ bir:BeaconShape
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:nodeKind sh:IRI ;
-        sh:message "bir:locatedIn is required (exactly once) and must be an IRI" ;
+        sh:pattern "^urn:bir:[a-z][a-z\\-]*:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" ;
+        sh:message "bir:locatedIn must reference a valid bir_id IRI (urn:bir:{kind}:{uuid})" ;
     ] ;
     sh:property [
         sh:path bir:beaconProtocol ;

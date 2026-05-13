@@ -8,229 +8,229 @@
     "FUN-BIR-004"
   ],
   "type": "component",
-  "run_timestamp": "2026-05-13T08:08:30Z",
+  "run_timestamp": "2026-05-13T11:17:57Z",
   "overall_result": "PASS",
   "cases": [
     {
       "test_id": "tests/component/test_beacon.py::test_write_beacon_returns_201",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_write_beacon_missing_located_in_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_write_beacon_bad_iri_pattern_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_write_beacon_duplicate_located_in_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_beacon_lookup_returns_bir_id",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_beacon_lookup_not_registered_returns_404",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_beacon_lookup_invalid_id_format_returns_400",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_write_beacon_is_idempotent",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_beacon.py::test_write_beacon_does_not_publish_nats_event",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_write_and_read_entity",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_lookup_by_ifc_guid_space",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:56Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_lookup_by_ifc_guid_device",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_lookup_by_revit_id",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_lookup_by_energyplus_zone",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_lookup_nonexistent_returns_404",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_lookup_unknown_system_returns_400",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_get_nonexistent_entity_returns_404",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_nats_event_published_on_write",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_crud.py::test_update_entity_diff_on_second_write",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_parse_valid_space",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_parse_valid_ctrl_seq",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_parse_invalid_format_raises",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_parse_unknown_kind_raises",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_parse_uppercase_uuid_raises",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_from_ifc_guid_is_deterministic",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_from_ifc_guid_different_inputs_differ",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_from_ifc_guid_result_is_parseable",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_new_generates_valid_bir_id",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_to_nats_slug",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bir_id.py::test_all_known_kinds_parseable",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_valid_space_accepted",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_valid_device_accepted",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_bad_iri_uppercase_kind_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_bad_iri_unknown_kind_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_missing_status_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_invalid_status_value_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_shacl_gate.py::test_duplicate_ifc_guid_rejected",
       "result": "PASS",
-      "timestamp": "2026-05-13T08:08:30Z",
+      "timestamp": "2026-05-13T11:17:57Z",
       "detail": ""
     }
   ]

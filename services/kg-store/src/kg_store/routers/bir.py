@@ -147,18 +147,27 @@ async def write_beacon(request: Request) -> JSONResponse:
         import io
         buf = io.BytesIO()
         report_graph.serialize(buf, format="turtle")
-        raise HTTPException(422, detail={"error": "SHACL validation failed",
-                                         "report": buf.getvalue().decode()})
+        raise HTTPException(
+            422,
+            detail={
+                "error": "SHACL validation failed",
+                "report": buf.getvalue().decode(),
+            },
+        )
 
-    beacon_id = _extract_beacon_id(turtle)
+    try:
+        beacon_id = _extract_beacon_id(turtle)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
     if not beacon_id:
         raise HTTPException(400, "No bir:Beacon subject (urn:beacon:*) found in provided Turtle")
 
     repo = request.app.state.repo
-    delete_sparql = f"DELETE WHERE {{ <{beacon_id}> ?p ?o }}"
-    insert_sparql = _turtle_to_insert(turtle)
-    await repo.sparql_update(delete_sparql)
-    await repo.sparql_update(insert_sparql)
+    # Atomic DELETE+INSERT in a single SPARQL Update request; triples are
+    # filtered to the beacon subject only to prevent unintended graph mutation.
+    ntriples = _turtle_to_ntriples_for_subject(turtle, beacon_id)
+    atomic_sparql = f"DELETE WHERE {{ <{beacon_id}> ?p ?o }} ;\nINSERT DATA {{\n{ntriples}}}"
+    await repo.sparql_update(atomic_sparql)
 
     return JSONResponse({"beacon_id": beacon_id, "status": "written"}, status_code=201)
 
@@ -222,15 +231,39 @@ def _extract_bir_id(turtle: str) -> str:
 
 
 def _extract_beacon_id(turtle: str) -> str:
-    """Extract the first urn:beacon: subject from Turtle."""
+    """Extract the single bir:Beacon subject from Turtle.
+
+    Raises ValueError if multiple bir:Beacon subjects are found (caller returns 400).
+    Returns "" if none found.
+    """
+    import rdflib
+
+    BIR = rdflib.Namespace("https://arch-pulse.example/ns/bir#")
+    g = rdflib.Graph()
+    g.parse(data=turtle, format="turtle")
+    beacons = [str(s) for s in g.subjects(rdflib.RDF.type, BIR.Beacon)
+               if isinstance(s, rdflib.URIRef)]
+    if len(beacons) > 1:
+        raise ValueError(f"Payload must contain exactly one bir:Beacon subject; found: {beacons}")
+    return beacons[0] if beacons else ""
+
+
+def _turtle_to_ntriples_for_subject(turtle: str, subject_iri: str) -> str:
+    """Return N-Triples for triples whose subject is exactly subject_iri.
+
+    Filters out any extra subjects in the payload so only the intended entity
+    is written, preserving idempotency and preventing unintended graph mutation.
+    """
     import rdflib
 
     g = rdflib.Graph()
     g.parse(data=turtle, format="turtle")
-    for s in g.subjects():
-        if isinstance(s, rdflib.URIRef) and str(s).startswith("urn:beacon:"):
-            return str(s)
-    return ""
+    subj = rdflib.URIRef(subject_iri)
+    return "".join(
+        f"  {subj.n3()} {p.n3()} {o.n3()} .\n"
+        for s, p, o in g
+        if s == subj
+    )
 
 
 def _turtle_to_insert(turtle: str) -> str:
