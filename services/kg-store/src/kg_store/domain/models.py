@@ -19,6 +19,12 @@ class BirLookupResult(BaseModel):
     external_refs: ExternalRefs
 
 
+class BeaconLookupResult(BaseModel):
+    beacon_id: str  # urn:beacon:{id}
+    bir_id: str     # urn:bir:space:{uuid}
+    kind: str       # e.g. "space"
+
+
 class DcatPeriod(BaseModel):
     start: str
     end: str

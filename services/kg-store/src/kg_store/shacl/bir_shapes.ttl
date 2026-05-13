@@ -38,3 +38,29 @@ bir:ExternalRefCardinalityShape
     sh:property [ sh:path bir:hasP223SpaceUri    ; sh:maxCount 1 ] ;
     sh:property [ sh:path bir:hasBasPointPrefix  ; sh:maxCount 1 ] ;
     sh:property [ sh:path bir:hasBrickUri        ; sh:maxCount 1 ] .
+
+# Beacon shape — urn:beacon:{hardware-id} linked to space bir_id (Issue #1, Slice 6-a)
+# Beacons use their own URI scheme and are NOT bir:Entity instances.
+bir:BeaconShape
+    a sh:NodeShape ;
+    sh:targetClass bir:Beacon ;
+    sh:nodeKind sh:IRI ;
+    sh:pattern "^urn:beacon:[A-Za-z0-9][A-Za-z0-9\\-_:.]*$" ;
+    sh:message "Beacon IRI must match urn:beacon:{hardware-id}" ;
+    sh:property [
+        sh:path bir:locatedIn ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "bir:locatedIn is required (exactly once) and must be an IRI" ;
+    ] ;
+    sh:property [
+        sh:path bir:beaconProtocol ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path bir:floor ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] .
