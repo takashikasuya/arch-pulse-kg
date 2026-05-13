@@ -67,7 +67,22 @@ services:
   # ── AI-GRAPHRAG ───────────────────────────────────────────────────────────
   ai-graphrag:
     image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag:${VERSION:-dev}
-    # build: ../services/graphrag
+    build: ../services/graphrag
+    ports:
+      - "8000:8000"
+    environment:
+      KG_STORE_URL: "http://kg-store:8080"
+      TS_DB_URL: ""       # empty → NullTsReader (degraded mode); set when CS-IN-TS-DB available
+      LOG_LEVEL: "INFO"
+    depends_on:
+      kg-store:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
 volumes:
   oxigraph-data:
