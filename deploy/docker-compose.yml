@@ -19,14 +19,15 @@ services:
       LOG_LEVEL: "INFO"
     depends_on:
       kg-store-oxigraph:
-        condition: service_healthy
+        condition: service_started
       nats:
         condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/healthz')"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 15s
 
   # ── Oxigraph (RDF triplestore) ────────────────────────────────────────────
   kg-store-oxigraph:
@@ -36,11 +37,8 @@ services:
     command: serve --location /data --bind 0.0.0.0:7878
     ports:
       - "7878:7878"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7878/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+    # Oxigraph is a minimal binary without curl/wget; rely on service_started
+    # kg-store's OxigraphHttpRepository retries on startup if Oxigraph isn't ready yet
 
   # ── NATS JetStream ────────────────────────────────────────────────────────
   nats:

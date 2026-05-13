@@ -1,0 +1,29 @@
+{
+  "ids": ["TC-INT-026", "TC-INT-028"],
+  "verifies": {
+    "TC-INT-026": ["REQ-SOS-028", "REQ-SOS-032"],
+    "TC-INT-028": ["REQ-SOS-028", "FUN-BIR-003", "FUN-BIR-004"]
+  },
+  "type": "integration",
+  "run_timestamp": "2026-05-13T01:10:58Z",
+  "overall_result": "PASS",
+  "environment": {
+    "kg_store_url": "http://localhost:8080",
+    "kg_store_image": "ghcr.io/takashikasuya/arch-pulse-kg/kg-store:dev",
+    "oxigraph_image": "oxigraph/oxigraph:latest",
+    "nats_image": "nats:2.10"
+  },
+  "cases": [
+    {"test_id": "TestTC_INT_026::test_invalid_kind_blocked", "result": "PASS", "tc": "TC-INT-026"},
+    {"test_id": "TestTC_INT_026::test_missing_status_blocked", "result": "PASS", "tc": "TC-INT-026"},
+    {"test_id": "TestTC_INT_026::test_invalid_status_value_blocked", "result": "PASS", "tc": "TC-INT-026"},
+    {"test_id": "TestTC_INT_026::test_duplicate_external_ref_blocked", "result": "PASS", "tc": "TC-INT-026"},
+    {"test_id": "TestTC_INT_026::test_invalid_entity_not_in_store", "result": "PASS", "tc": "TC-INT-026"},
+    {"test_id": "TestTC_INT_028::test_lookup_space_by_ifc_guid", "result": "PASS", "tc": "TC-INT-028"},
+    {"test_id": "TestTC_INT_028::test_lookup_space_by_revit_id", "result": "PASS", "tc": "TC-INT-028"},
+    {"test_id": "TestTC_INT_028::test_lookup_space_by_energyplus_zone", "result": "PASS", "tc": "TC-INT-028"},
+    {"test_id": "TestTC_INT_028::test_lookup_device_by_ifc_guid", "result": "PASS", "tc": "TC-INT-028"},
+    {"test_id": "TestTC_INT_028::test_get_entity_by_bir_id", "result": "PASS", "tc": "TC-INT-028"},
+    {"test_id": "TestTC_INT_028::test_sparql_query_by_ifc_guid", "result": "PASS", "tc": "TC-INT-028"}
+  ]
+}

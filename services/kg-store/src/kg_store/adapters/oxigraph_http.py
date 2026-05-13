@@ -71,7 +71,12 @@ class OxigraphHttpRepository(TriplestoreRepository):
 
     async def is_alive(self) -> bool:
         try:
-            r = await self._client.get("/health")
+            # Oxigraph has no /health; use a trivial ASK query instead
+            r = await self._client.get(
+                "/query",
+                params={"query": "ASK {}"},
+                headers={"Accept": "application/sparql-results+json"},
+            )
             return r.status_code == 200
         except Exception:
             return False
