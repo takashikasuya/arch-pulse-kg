@@ -1,0 +1,40 @@
+# BIR SHACL shapes — bir_id URN pattern + cardinality constraints
+# Ref: interfaces/IF-KG-BIR/bir-id-urn-spec.md, ADR-002, ADR-006
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix bir:  <https://arch-pulse.example/ns/bir#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# IRI of every bir:Entity must match urn:bir:{kind}:{uuid} pattern
+bir:BirIdShape
+    a sh:NodeShape ;
+    sh:targetClass bir:Entity ;
+    sh:nodeKind sh:IRI ;
+    sh:pattern "^urn:bir:(building|floor|space|zone|surface|opening|device|point|system|geometry|schedule|tenant|policy|dataset|model|run|visitor|robot|ctrl-seq):[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" ;
+    sh:message "bir_id IRI must match urn:bir:{kind}:{uuid}" .
+
+# bir:status is required and must be a recognised lifecycle value
+bir:StatusShape
+    a sh:NodeShape ;
+    sh:targetClass bir:Entity ;
+    sh:property [
+        sh:path bir:status ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:pattern "^(Active|Draft|Archived|Superseded)$" ;
+        sh:message "bir:status must be one of Active | Draft | Archived | Superseded" ;
+    ] .
+
+# External-ref properties are single-valued (REQ-SOS-028 §5.2)
+bir:ExternalRefCardinalityShape
+    a sh:NodeShape ;
+    sh:targetClass bir:Entity ;
+    sh:property [ sh:path bir:hasIfcGuid         ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasRevitElementId  ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasGbxmlSpaceId    ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasEnergyPlusZone  ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasP223SpaceUri    ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasBasPointPrefix  ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasBrickUri        ; sh:maxCount 1 ] .

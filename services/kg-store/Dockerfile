@@ -1,9 +1,14 @@
-FROM eclipse-temurin:21-jdk AS build
-WORKDIR /src
-COPY . .
-RUN ./gradlew build -x test
-FROM eclipse-temurin:21-jre
+FROM python:3.11-slim
+
 WORKDIR /app
-COPY --from=build /src/build/libs/*.jar app.jar
+
+COPY pyproject.toml ./
+COPY src/ ./src/
+
+RUN pip install --no-cache-dir .
+
+ENV PYTHONPATH=/app/src
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+CMD ["uvicorn", "kg_store.main:app", "--host", "0.0.0.0", "--port", "8080"]

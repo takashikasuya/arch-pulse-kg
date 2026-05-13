@@ -18,11 +18,13 @@ implements:
   - FUN-KG-001
   - FUN-KG-002
   - FUN-BIR-004
+  - FUN-COLD-005
 interfaces:
   provides:
   - IF-KG-001
+  - IF-COLD-CATALOG
   consumes: []
-stack: java
+stack: python
 runtime: service
 adr_ref:
 - ADR-002
