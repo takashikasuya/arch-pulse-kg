@@ -1,0 +1,60 @@
+{
+  "tc_id": "TC-COMP-AI-GRAPHRAG-001",
+  "verifies": [
+    "REQ-SOS-022",
+    "FUN-ENERGY-002",
+    "FUN-ENERGY-003"
+  ],
+  "results": [
+    {
+      "test": "tests/component/test_causal_analysis.py::test_causal_analysis_returns_200",
+      "outcome": "passed",
+      "duration": 0.003
+    },
+    {
+      "test": "tests/component/test_causal_analysis.py::test_assertion_citation_map_is_bijective",
+      "outcome": "passed",
+      "duration": 0.002
+    },
+    {
+      "test": "tests/component/test_causal_analysis.py::test_empty_kg_returns_empty_paths",
+      "outcome": "passed",
+      "duration": 0.001
+    },
+    {
+      "test": "tests/component/test_causal_analysis.py::test_invalid_bir_id_returns_422",
+      "outcome": "passed",
+      "duration": 0.001
+    },
+    {
+      "test": "tests/component/test_causal_analysis.py::test_evidence_payload_contains_citations",
+      "outcome": "passed",
+      "duration": 0.002
+    },
+    {
+      "test": "tests/component/test_citation.py::test_citation_id_is_unique_per_call",
+      "outcome": "passed",
+      "duration": 0.0
+    },
+    {
+      "test": "tests/component/test_citation.py::test_citation_source_is_if_kg_001",
+      "outcome": "passed",
+      "duration": 0.0
+    },
+    {
+      "test": "tests/component/test_citation.py::test_all_path_citations_in_citation_list",
+      "outcome": "passed",
+      "duration": 0.0
+    },
+    {
+      "test": "tests/component/test_citation.py::test_evidence_payload_structure",
+      "outcome": "passed",
+      "duration": 0.0
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0
+  }
+}

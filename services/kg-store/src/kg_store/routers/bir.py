@@ -1,14 +1,18 @@
 """BIR entity write/read and external-ID lookup (REQ-SOS-028)."""
 import json
+import re
 from fastapi import APIRouter, Request, HTTPException, Response
 from fastapi.responses import JSONResponse
 
 from ..domain import bir_id as bir_id_mod
-from ..domain.models import BirLookupResult, ExternalRefs
+from ..domain.models import BirLookupResult, BeaconLookupResult, ExternalRefs
 
 router = APIRouter(prefix="/bir")
 
 BIR_NS = "https://arch-pulse.example/ns/bir#"
+
+# Must stay in sync with sh:pattern in bir:BeaconShape (bir_shapes.ttl)
+_BEACON_ID_RE = re.compile(r"^urn:beacon:[A-Za-z0-9][A-Za-z0-9\-_:.]*$")
 
 # Map query param 'system' value → RDF predicate
 _SYSTEM_PREDICATE: dict[str, str] = {
@@ -129,6 +133,77 @@ async def lookup(system: str, id: str, request: Request) -> JSONResponse:
     )
 
 
+# ── Beacon endpoints (Issue #1, Slice 6-a) ────────────────────────────────────
+
+@router.post("/beacons", status_code=201)
+async def write_beacon(request: Request) -> JSONResponse:
+    """Register a bir:Beacon entity (urn:beacon:{id}) linked to a space bir_id."""
+    body_bytes = await request.body()
+    turtle = body_bytes.decode()
+
+    shapes_ttl: str = request.app.state.bir_shapes_ttl
+    conforms, report_graph, _ = _run_shacl(turtle, shapes_ttl)
+    if not conforms:
+        import io
+        buf = io.BytesIO()
+        report_graph.serialize(buf, format="turtle")
+        raise HTTPException(
+            422,
+            detail={
+                "error": "SHACL validation failed",
+                "report": buf.getvalue().decode(),
+            },
+        )
+
+    try:
+        beacon_id = _extract_beacon_id(turtle)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if not beacon_id:
+        raise HTTPException(400, "No bir:Beacon subject (urn:beacon:*) found in provided Turtle")
+
+    repo = request.app.state.repo
+    # Atomic DELETE+INSERT in a single SPARQL Update request; triples are
+    # filtered to the beacon subject only to prevent unintended graph mutation.
+    ntriples = _turtle_to_ntriples_for_subject(turtle, beacon_id)
+    atomic_sparql = f"DELETE WHERE {{ <{beacon_id}> ?p ?o }} ;\nINSERT DATA {{\n{ntriples}}}"
+    await repo.sparql_update(atomic_sparql)
+
+    return JSONResponse({"beacon_id": beacon_id, "status": "written"}, status_code=201)
+
+
+@router.get("/beacon-lookup")
+async def beacon_lookup(beacon_id: str, request: Request) -> JSONResponse:
+    """Resolve a beacon ID to the space bir_id it is located in."""
+    if not _BEACON_ID_RE.match(beacon_id):
+        raise HTTPException(400, f"Invalid beacon_id format: {beacon_id!r}. "
+                                 "Expected urn:beacon:{{hardware-id}}")
+
+    repo = request.app.state.repo
+    sparql = f"""
+    PREFIX bir: <{BIR_NS}>
+    SELECT ?bir_id WHERE {{
+        <{beacon_id}> bir:locatedIn ?bir_id .
+    }}
+    LIMIT 1
+    """
+    raw = await repo.sparql_query(sparql, accept="application/sparql-results+json")
+    data = json.loads(raw)
+    bindings = data.get("results", {}).get("bindings", [])
+    if not bindings:
+        raise HTTPException(404, f"No space found for beacon {beacon_id!r}")
+
+    found_bir_id = bindings[0]["bir_id"]["value"]
+    try:
+        parsed = bir_id_mod.parse(found_bir_id)
+    except ValueError as exc:
+        raise HTTPException(500, f"Stored bir_id is invalid: {found_bir_id!r}") from exc
+
+    return JSONResponse(
+        BeaconLookupResult(beacon_id=beacon_id, bir_id=found_bir_id, kind=parsed.kind).model_dump()
+    )
+
+
 # ── helpers ──────────────────────────────────────────────────────────────────
 
 def _run_shacl(data_ttl: str, shapes_ttl: str):
@@ -153,6 +228,42 @@ def _extract_bir_id(turtle: str) -> str:
         if isinstance(s, rdflib.URIRef) and str(s).startswith("urn:bir:"):
             return str(s)
     return ""
+
+
+def _extract_beacon_id(turtle: str) -> str:
+    """Extract the single bir:Beacon subject from Turtle.
+
+    Raises ValueError if multiple bir:Beacon subjects are found (caller returns 400).
+    Returns "" if none found.
+    """
+    import rdflib
+
+    BIR = rdflib.Namespace("https://arch-pulse.example/ns/bir#")
+    g = rdflib.Graph()
+    g.parse(data=turtle, format="turtle")
+    beacons = [str(s) for s in g.subjects(rdflib.RDF.type, BIR.Beacon)
+               if isinstance(s, rdflib.URIRef)]
+    if len(beacons) > 1:
+        raise ValueError(f"Payload must contain exactly one bir:Beacon subject; found: {beacons}")
+    return beacons[0] if beacons else ""
+
+
+def _turtle_to_ntriples_for_subject(turtle: str, subject_iri: str) -> str:
+    """Return N-Triples for triples whose subject is exactly subject_iri.
+
+    Filters out any extra subjects in the payload so only the intended entity
+    is written, preserving idempotency and preventing unintended graph mutation.
+    """
+    import rdflib
+
+    g = rdflib.Graph()
+    g.parse(data=turtle, format="turtle")
+    subj = rdflib.URIRef(subject_iri)
+    return "".join(
+        f"  {subj.n3()} {p.n3()} {o.n3()} .\n"
+        for s, p, o in g
+        if s == subj
+    )
 
 
 def _turtle_to_insert(turtle: str) -> str:
