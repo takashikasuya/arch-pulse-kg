@@ -1,5 +1,6 @@
 """Cold Storage DCAT Catalog (IF-COLD-CATALOG, FUN-COLD-005)."""
 import json
+import rdflib
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
 
@@ -19,15 +20,9 @@ async def register_dataset(request: Request) -> JSONResponse:
     ds = DcatDataset.model_validate(body)
 
     repo = request.app.state.repo
-    turtle = _dataset_to_turtle(ds)
+    ntriples = _dataset_to_ntriples(ds)
     try:
-        sparql = f"""
-        INSERT DATA {{
-            GRAPH <{_CATALOG_GRAPH}> {{
-                {turtle}
-            }}
-        }}
-        """
+        sparql = f"INSERT DATA {{\n    GRAPH <{_CATALOG_GRAPH}> {{\n{ntriples}    }}\n}}"
         await repo.sparql_update(sparql)
     except Exception as exc:
         raise HTTPException(409, f"Dataset registration failed: {exc}") from exc
@@ -46,11 +41,17 @@ async def search_datasets(
 
     filters: list[str] = []
     if tenant:
-        filters.append(f'?ds <{_BIR_NS}tenantScope> "{tenant}" .')
+        filters.append(f"?ds <{_BIR_NS}tenantScope> {rdflib.Literal(tenant).n3()} .")
     if dataClass:
-        filters.append(f'?ds <{_BIR_NS}dataClass> "{dataClass}" .')
+        filters.append(f"?ds <{_BIR_NS}dataClass> {rdflib.Literal(dataClass).n3()} .")
     if bir_id:
-        filters.append(f'FILTER(CONTAINS(STR(?ds), "{bir_id}"))')
+        # bir_id is a URI suffix — validate it rather than embedding raw
+        try:
+            import urllib.parse
+            safe = urllib.parse.quote(bir_id, safe=":/-")
+            filters.append(f"FILTER(CONTAINS(STR(?ds), {rdflib.Literal(safe).n3()}))")
+        except Exception:
+            raise HTTPException(400, "Invalid bir_id filter value")
 
     filter_block = "\n        ".join(filters)
     sparql = f"""
@@ -80,16 +81,17 @@ async def search_datasets(
     return JSONResponse(results)
 
 
-def _dataset_to_turtle(ds: DcatDataset) -> str:
-    lines = [
-        f'<{ds.dataset_uri}> a <{_DCAT_NS}Dataset> ;',
-        f'    <{_BIR_NS}tenantScope>  "{ds.tenant_scope}" ;',
-        f'    <{_BIR_NS}dataClass>    "{ds.data_class}" ;',
-        f'    <{_BIR_NS}optInJobId>   "{ds.opt_in_job_id}" ;',
-        f'    <{_DCAT_NS}byteSize>    {ds.byte_size} ;',
-        f'    <{_PROV_NS}wasDerivedFrom> <{ds.was_derived_from}> ;',
-        f'    <{_DCAT_NS}startDate>   "{ds.period.start}" ;',
-        f'    <{_DCAT_NS}endDate>     "{ds.period.end}" ;',
-        f'    <{_BIR_NS}checksum>     "{ds.checksum.value}" .',
-    ]
-    return "\n        ".join(lines)
+def _dataset_to_ntriples(ds: DcatDataset) -> str:
+    """Build N-Triples using rdflib so all literals are properly escaped."""
+    g = rdflib.Graph()
+    subj = rdflib.URIRef(ds.dataset_uri)
+    g.add((subj, rdflib.RDF.type,                        rdflib.URIRef(f"{_DCAT_NS}Dataset")))
+    g.add((subj, rdflib.URIRef(f"{_BIR_NS}tenantScope"), rdflib.Literal(ds.tenant_scope)))
+    g.add((subj, rdflib.URIRef(f"{_BIR_NS}dataClass"),   rdflib.Literal(ds.data_class)))
+    g.add((subj, rdflib.URIRef(f"{_BIR_NS}optInJobId"),  rdflib.Literal(ds.opt_in_job_id)))
+    g.add((subj, rdflib.URIRef(f"{_DCAT_NS}byteSize"),   rdflib.Literal(ds.byte_size)))
+    g.add((subj, rdflib.URIRef(f"{_PROV_NS}wasDerivedFrom"), rdflib.URIRef(ds.was_derived_from)))
+    g.add((subj, rdflib.URIRef(f"{_DCAT_NS}startDate"),  rdflib.Literal(str(ds.period.start))))
+    g.add((subj, rdflib.URIRef(f"{_DCAT_NS}endDate"),    rdflib.Literal(str(ds.period.end))))
+    g.add((subj, rdflib.URIRef(f"{_BIR_NS}checksum"),    rdflib.Literal(ds.checksum.value)))
+    return "".join(f"        {s.n3()} {p.n3()} {o.n3()} .\n" for s, p, o in g)

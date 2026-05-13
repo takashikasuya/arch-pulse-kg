@@ -13,9 +13,18 @@ async def shacl_validate(request: Request) -> Response:
     shapes_ttl: str = request.app.state.bir_shapes_ttl
 
     if "multipart/form-data" in content_type:
+        from starlette.datastructures import UploadFile as StarletteUploadFile
         form = await request.form()
-        data_str = form.get("data", "")
-        custom_shapes = form.get("shapes", None)
+        data_field = form.get("data", "")
+        if isinstance(data_field, StarletteUploadFile):
+            data_str = (await data_field.read()).decode()
+        else:
+            data_str = data_field
+        shapes_field = form.get("shapes", None)
+        if isinstance(shapes_field, StarletteUploadFile):
+            custom_shapes = (await shapes_field.read()).decode()
+        else:
+            custom_shapes = shapes_field
     elif "application/json" in content_type:
         body = await request.json()
         data_str = body.get("data", "")

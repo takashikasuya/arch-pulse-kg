@@ -50,15 +50,22 @@ async def write_entity(request: Request) -> JSONResponse:
         raise HTTPException(400, "No bir:Entity subject (urn:bir:*) found in provided Turtle")
     before = await _get_entity_triples(repo, bir_id)
 
-    sparql = _turtle_to_insert(turtle)
-    await repo.sparql_update(sparql)
+    # Atomic replace: delete all existing triples for this entity, then insert new ones.
+    delete_sparql = f"DELETE WHERE {{ <{bir_id}> ?p ?o }}"
+    insert_sparql = _turtle_to_insert(turtle)
+    await repo.sparql_update(delete_sparql)
+    await repo.sparql_update(insert_sparql)
 
     after = await _get_entity_triples(repo, bir_id)
     added = list(after - before)
     removed = list(before - after)
 
     default_tid = "urn:bir:tenant:00000000-0000-0000-0000-000000000000"
-    await publisher.publish_bir_updated(default_tid, bir_id, added, removed)
+    try:
+        await publisher.publish_bir_updated(default_tid, bir_id, added, removed)
+    except Exception:
+        import logging
+        logging.getLogger(__name__).warning("NATS publish failed for %s; write committed", bir_id)
 
     return JSONResponse({"bir_id": bir_id, "status": "written"}, status_code=201)
 
@@ -90,11 +97,13 @@ async def lookup(system: str, id: str, request: Request) -> JSONResponse:
         raise HTTPException(400, f"Unknown system: {system!r}. Choose from: {list(_SYSTEM_PREDICATE)}")
 
     repo = request.app.state.repo
+    import rdflib
+    id_literal = rdflib.Literal(id).n3()
     sparql = f"""
     PREFIX bir: <{BIR_NS}>
     SELECT ?entity ?status WHERE {{
         ?entity a bir:Entity ;
-                <{pred}> "{id}" ;
+                <{pred}> {id_literal} ;
                 bir:status ?status .
     }}
     LIMIT 1

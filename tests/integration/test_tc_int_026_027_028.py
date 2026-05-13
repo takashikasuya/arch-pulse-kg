@@ -23,15 +23,18 @@ pytestmark = pytest.mark.integration
 @pytest.fixture(scope="module")
 def http():
     with httpx.Client(base_url=KG_STORE_URL, timeout=10.0) as c:
-        # Wait for service readiness
+        ready = False
         for _ in range(20):
             try:
                 r = c.get("/healthz")
                 if r.status_code == 200:
+                    ready = True
                     break
             except Exception:
                 pass
             time.sleep(1)
+        if not ready:
+            pytest.fail(f"kg-store at {KG_STORE_URL} did not become ready within 20 s")
         yield c
 
 

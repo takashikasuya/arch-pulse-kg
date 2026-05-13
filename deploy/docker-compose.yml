@@ -31,7 +31,7 @@ services:
 
   # ── Oxigraph (RDF triplestore) ────────────────────────────────────────────
   kg-store-oxigraph:
-    image: oxigraph/oxigraph:latest
+    image: oxigraph/oxigraph:0.3.22
     volumes:
       - oxigraph-data:/data
     command: serve --location /data --bind 0.0.0.0:7878
