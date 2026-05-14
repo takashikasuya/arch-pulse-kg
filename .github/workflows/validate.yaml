@@ -105,3 +105,54 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # 他 CS のビルド手順はここに追記する
+
+  # Docker イメージビルド + GHCR push（main/develop push 時のみ）
+  docker-build-push:
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - service: kg-store
+            context: services/kg-store
+            image: ghcr.io/takashikasuya/arch-pulse-kg/kg-store
+          - service: graphrag
+            context: services/graphrag
+            image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=sha-,format=short
+            type=raw,value=dev,enable=${{ github.ref == 'refs/heads/develop' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push ${{ matrix.service }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
