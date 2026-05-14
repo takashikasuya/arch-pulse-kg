@@ -120,7 +120,7 @@ jobs:
           - service: kg-store
             context: services/kg-store
             image: ghcr.io/takashikasuya/arch-pulse-kg/kg-store
-          - service: ai-graphrag
+          - service: graphrag
             context: services/graphrag
             image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag
     steps:
