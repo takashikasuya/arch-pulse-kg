@@ -8,7 +8,7 @@ services:
 
   # ── KG-STORE (Python/FastAPI) ─────────────────────────────────────────────
   kg-store:
-    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-store:${VERSION:-dev}
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-store:${VERSION:-latest}
     build: ../services/kg-store
     ports:
       - "8080:8080"
@@ -51,22 +51,22 @@ services:
 
   # ── KG-GEOM ───────────────────────────────────────────────────────────────
   kg-geom:
-    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-geom:${VERSION:-dev}
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-geom:${VERSION:-latest}
     # build: ../services/kg-geom
 
   # ── KG-BIM-LOADER ─────────────────────────────────────────────────────────
   kg-bim-loader:
-    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-bim-loader:${VERSION:-dev}
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-bim-loader:${VERSION:-latest}
     # build: ../services/kg-bim-loader
 
   # ── KG-NET-WRITER ─────────────────────────────────────────────────────────
   kg-net-writer:
-    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-net-writer:${VERSION:-dev}
+    image: ghcr.io/takashikasuya/arch-pulse-kg/kg-net-writer:${VERSION:-latest}
     # build: ../services/kg-net-writer
 
   # ── AI-GRAPHRAG ───────────────────────────────────────────────────────────
   ai-graphrag:
-    image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag:${VERSION:-dev}
+    image: ghcr.io/takashikasuya/arch-pulse-kg/graphrag:${VERSION:-latest}
     build: ../services/graphrag
     ports:
       - "8000:8000"
