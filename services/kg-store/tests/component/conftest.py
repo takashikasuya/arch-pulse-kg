@@ -66,6 +66,7 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
                     "FUN-KG-002",
                     "FUN-BIR-004",
                     "FUN-KG-003",
+                    "IF-KG-TAGSEARCH",
                 ],
                 "type": "component",
                 "run_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

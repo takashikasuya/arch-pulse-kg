@@ -1,6 +1,6 @@
 # コンポーネントテスト: REQ-SOS-060
 
-- id: TC-COMP-KG-STORE-003
+- id: TC-COMP-KG-STORE-005
   title: REQ-SOS-060 customTags タグ検索実装検証
   verifies:
   - REQ-SOS-060
