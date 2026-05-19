@@ -9,7 +9,8 @@ from fastapi import FastAPI
 from .config import settings
 from .ports.triplestore import TriplestoreRepository
 from .ports.events import ChangeEventPublisher
-from .routers import health, sparql, shacl, bir, catalog
+from .routers import health, sparql, shacl, bir, catalog, tags
+from .services.tag_validator import load_haystack_catalog
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ def create_app(
             app.state.publisher = publisher
 
         app.state.bir_shapes_ttl = _shapes_ttl
+        app.state.haystack_catalog = load_haystack_catalog()
         logger.info("CS-KG-STORE startup complete")
         yield
         await app.state.repo.aclose()
@@ -69,6 +71,7 @@ def create_app(
     app.include_router(shacl.router)
     app.include_router(bir.router)
     app.include_router(catalog.router)
+    app.include_router(tags.router)
     return app
 
 

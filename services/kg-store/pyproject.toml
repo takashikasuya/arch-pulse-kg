@@ -17,6 +17,7 @@ dependencies = [
     "pydantic-settings>=2.3",
     "pyoxigraph>=0.3",
     "python-multipart>=0.0.9",
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]

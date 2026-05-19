@@ -1,0 +1,13 @@
+# コントラクトテスト: IF-KG-TAGSEARCH
+
+- id: TC-CONTRACT-IF-KG-TAGSEARCH-001
+  title: IF-KG-TAGSEARCH GET /tags/search レスポンス構造検証
+  verifies:
+  - IF-KG-TAGSEARCH
+  - REQ-SOS-060
+  - REQ-SOS-061
+  type: contract
+  run:
+    command: pytest tests/component/test_tags.py
+  evidence:
+    output: evidence/TC-COMP-KG-STORE-002.json

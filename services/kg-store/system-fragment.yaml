@@ -13,16 +13,20 @@ implements:
   - REQ-SOS-002
   - REQ-SOS-028
   - REQ-SOS-032
+  - REQ-SOS-060
+  - REQ-SOS-061
   functions:
   - FUN-BIR-003
   - FUN-KG-001
   - FUN-KG-002
   - FUN-BIR-004
   - FUN-COLD-005
+  - FUN-KG-003
 interfaces:
   provides:
   - IF-KG-001
   - IF-COLD-CATALOG
+  - IF-KG-TAGSEARCH
   consumes: []
 stack: python
 runtime: service
@@ -32,3 +36,4 @@ adr_ref:
 - ADR-007
 - ADR-008
 - ADR-011
+- ADR-021
