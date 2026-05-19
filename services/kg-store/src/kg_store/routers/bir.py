@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 from ..domain import bir_id as bir_id_mod
 from ..domain.models import BirLookupResult, BeaconLookupResult, ExternalRefs
+from ..services.tag_validator import validate_custom_tags
 
 router = APIRouter(prefix="/bir")
 
@@ -45,6 +46,17 @@ async def write_entity(request: Request) -> JSONResponse:
                 "report": buf.getvalue().decode(),
             },
         )
+
+    # Catalog validation for haystack: prefixed customTags (7-c)
+    custom_tags = _extract_custom_tags(turtle)
+    if custom_tags:
+        catalog: frozenset[str] = request.app.state.haystack_catalog
+        invalid = validate_custom_tags(custom_tags, catalog)
+        if invalid:
+            raise HTTPException(
+                422,
+                detail={"error": "Unknown haystack tags", "invalid_tags": invalid},
+            )
 
     repo = request.app.state.repo
     publisher = request.app.state.publisher
@@ -295,6 +307,16 @@ async def _get_entity_triples(repo, bir_id: str) -> set[tuple[str, str, str]]:
             o = o_node.get("value", "")
         triples.add((bir_id, p, o))
     return triples
+
+
+def _extract_custom_tags(turtle: str) -> list[str]:
+    """Return all bir:customTag literal values from the Turtle payload."""
+    import rdflib
+
+    BIR = rdflib.Namespace("https://arch-pulse.example/ns/bir#")
+    g = rdflib.Graph()
+    g.parse(data=turtle, format="turtle")
+    return [str(o) for _, p, o in g if p == BIR.customTag and isinstance(o, rdflib.Literal)]
 
 
 def _predicate_to_field(pred: str) -> str:

@@ -1,0 +1,129 @@
+# haystack-tags.yaml — Project Haystack タグ語彙カタログ（正本スナップショット）
+#
+# 役割:
+#   SBCO customTags プロパティに付与する Haystack 標準タグの正本リスト。
+#   IF-KG-TAGSEARCH を通じて検索可能な値のうち、プレフィックス `haystack:` を
+#   持つ値はこのカタログに登録された語彙のみを許容する。運用カスタムタグは
+#   `bldg:` プレフィックスを使い、本カタログには登録不要。
+#
+# 規約（ADR-021）:
+#   - 値表現は customTags 内で "haystack:{tag}" の文字列として格納
+#   - 例: "haystack:hvac", "haystack:elec", "haystack:point"
+#   - カタログ未登録の "haystack:*" タグを customTags に書き込むことは validator で deny
+#   - "bldg:*" プレフィックスは運用側で自由追加（カタログ管理外）
+#
+# バージョン:
+#   このスナップショットは Project Haystack 4.0 / Haystack Defs を元に主要タグのみ抜粋。
+#   完全なカタログは後続スライスで Haystack 公式 def ファイル取り込みに置換予定。
+
+version: "4.0-subset"
+source: "https://project-haystack.org/doc/docHaystack/Defs"
+last_synced: "2026-05-13"
+
+tags:
+  # ── 機器カテゴリ（equipment）─────────────────────────────────────
+  - tag: equip
+    description: "Marks an entity as a piece of equipment"
+    applies_to: [Asset]
+  - tag: hvac
+    description: "Heating, ventilation, and air-conditioning equipment"
+    applies_to: [Asset]
+  - tag: lighting
+    description: "Lighting equipment / fixture"
+    applies_to: [Asset]
+  - tag: elec
+    description: "Electrical equipment"
+    applies_to: [Asset]
+  - tag: water
+    description: "Water-related equipment"
+    applies_to: [Asset]
+  - tag: ahu
+    description: "Air Handling Unit"
+    applies_to: [Asset]
+  - tag: vav
+    description: "Variable Air Volume box"
+    applies_to: [Asset]
+  - tag: chiller
+    description: "Chiller equipment"
+    applies_to: [Asset]
+  - tag: boiler
+    description: "Boiler equipment"
+    applies_to: [Asset]
+  - tag: pump
+    description: "Pump equipment"
+    applies_to: [Asset]
+  - tag: fan
+    description: "Fan equipment"
+    applies_to: [Asset]
+  - tag: meter
+    description: "Meter equipment (electric / gas / water)"
+    applies_to: [Asset]
+
+  # ── ポイント / センサ ───────────────────────────────────────────
+  - tag: point
+    description: "Point of telemetry (sensor / command / setpoint)"
+    applies_to: [Point]
+  - tag: sensor
+    description: "Sensed input point"
+    applies_to: [Point]
+  - tag: cmd
+    description: "Command output point"
+    applies_to: [Point]
+  - tag: sp
+    description: "Setpoint"
+    applies_to: [Point]
+  - tag: temp
+    description: "Temperature measurement"
+    applies_to: [Point]
+  - tag: humidity
+    description: "Humidity measurement"
+    applies_to: [Point]
+  - tag: co2
+    description: "CO2 concentration measurement"
+    applies_to: [Point]
+  - tag: power
+    description: "Active power measurement"
+    applies_to: [Point]
+  - tag: energy
+    description: "Energy consumption measurement"
+    applies_to: [Point]
+  - tag: occupied
+    description: "Occupancy status"
+    applies_to: [Point, Space]
+
+  # ── 空間 / 場所 ─────────────────────────────────────────────────
+  - tag: site
+    description: "Site (top of containment hierarchy)"
+    applies_to: [Site]
+  - tag: building
+    description: "Building"
+    applies_to: [Building]
+  - tag: floor
+    description: "Floor within a building"
+    applies_to: [Floor]
+  - tag: space
+    description: "Space (room / area)"
+    applies_to: [Space]
+  - tag: zone
+    description: "HVAC / lighting zone"
+    applies_to: [Space]
+
+  # ── ロール / 役割 ───────────────────────────────────────────────
+  - tag: discharge
+    description: "Discharge air / water on the leaving side of equipment"
+    applies_to: [Point]
+  - tag: return
+    description: "Return air / water on the returning side of equipment"
+    applies_to: [Point]
+  - tag: outside
+    description: "Outside air condition"
+    applies_to: [Point]
+  - tag: zone-air
+    description: "Air condition inside an occupied zone"
+    applies_to: [Point]
+
+# ── 予約プレフィックス ────────────────────────────────────────────
+# - "haystack:" は本カタログ語彙専用、customTags 書き込み時に validator で
+#   未登録タグを deny する
+# - "bldg:" は運用カスタムタグ用、カタログ管理外（自由追加可能）
+# - 上記以外のプレフィックスは現時点で予約解除（将来必要なら ADR で追加）

@@ -1,0 +1,13 @@
+# コンポーネントテスト: REQ-SOS-060
+
+- id: TC-COMP-KG-STORE-003
+  title: REQ-SOS-060 customTags タグ検索実装検証
+  verifies:
+  - REQ-SOS-060
+  - FUN-KG-003
+  - IF-KG-TAGSEARCH
+  type: component
+  run:
+    command: pytest tests/component/test_tags.py
+  evidence:
+    output: evidence/TC-COMP-KG-STORE-002.json

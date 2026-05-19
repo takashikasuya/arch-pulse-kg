@@ -1,0 +1,12 @@
+# コンポーネントテスト: REQ-SOS-061
+
+- id: TC-COMP-KG-STORE-004
+  title: REQ-SOS-061 テナント越境遮断検証
+  verifies:
+  - REQ-SOS-061
+  - FUN-KG-003
+  type: component
+  run:
+    command: pytest tests/component/test_tags.py::test_tag_search_tenant_isolation
+  evidence:
+    output: evidence/TC-COMP-KG-STORE-002.json

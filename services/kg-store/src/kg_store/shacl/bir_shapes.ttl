@@ -31,13 +31,27 @@ bir:StatusShape
 bir:ExternalRefCardinalityShape
     a sh:NodeShape ;
     sh:targetClass bir:Entity ;
-    sh:property [ sh:path bir:hasIfcGuid         ; sh:maxCount 1 ] ;
-    sh:property [ sh:path bir:hasRevitElementId  ; sh:maxCount 1 ] ;
-    sh:property [ sh:path bir:hasGbxmlSpaceId    ; sh:maxCount 1 ] ;
-    sh:property [ sh:path bir:hasEnergyPlusZone  ; sh:maxCount 1 ] ;
-    sh:property [ sh:path bir:hasP223SpaceUri    ; sh:maxCount 1 ] ;
-    sh:property [ sh:path bir:hasBasPointPrefix  ; sh:maxCount 1 ] ;
-    sh:property [ sh:path bir:hasBrickUri        ; sh:maxCount 1 ] .
+    sh:property [ sh:path bir:hasIfcGuid           ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasRevitElementId    ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasGbxmlSpaceId      ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasEnergyPlusZone    ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasP223SpaceUri      ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasBasPointPrefix    ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasBrickUri          ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:tenantScope          ; sh:maxCount 1 ] ;
+    sh:property [ sh:path bir:hasControlTemplate   ; sh:maxCount 1 ] .
+
+# customTag values must use haystack: or bldg: prefix (ADR-021, REQ-SOS-060)
+# Application-level validator additionally checks haystack: against the catalog (7-c).
+bir:CustomTagShape
+    a sh:NodeShape ;
+    sh:targetClass bir:Entity ;
+    sh:property [
+        sh:path bir:customTag ;
+        sh:datatype xsd:string ;
+        sh:pattern "^(haystack:|bldg:)[A-Za-z0-9][A-Za-z0-9\\-_]*$" ;
+        sh:message "customTag must use haystack: or bldg: prefix followed by [A-Za-z0-9-_]+" ;
+    ] .
 
 # Beacon shape — urn:beacon:{hardware-id} linked to space bir_id (Issue #1, Slice 6-a)
 # Beacons use their own URI scheme and are NOT bir:Entity instances.
