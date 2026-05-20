@@ -1,0 +1,13 @@
+# コンポーネントテスト: CS-KG-GEOM
+
+- id: TC-COMP-KG-GEOM-001
+  title: IF-KG-002 PostGIS ジオメトリストア + テナント隔離検証
+  verifies:
+  - IF-KG-002
+  - REQ-SOS-005
+  - REQ-SOS-026
+  type: component
+  run:
+    command: pytest tests/component/test_geom.py
+  evidence:
+    output: evidence/TC-COMP-KG-GEOM-001.json

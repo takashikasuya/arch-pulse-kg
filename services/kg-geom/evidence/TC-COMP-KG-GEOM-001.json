@@ -1,0 +1,61 @@
+{
+  "id": "TC-COMP-KG-GEOM-001",
+  "verifies": [
+    "IF-KG-002",
+    "REQ-SOS-005",
+    "REQ-SOS-026"
+  ],
+  "type": "component",
+  "run_timestamp": "2026-05-20T08:46:22Z",
+  "overall_result": "PASS",
+  "cases": [
+    {
+      "test_id": "tests/component/test_geom.py::test_write_and_get_geometry",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_head_returns_etag",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_lookup_space_by_point_hit",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_lookup_space_by_point_miss",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_nearby_assets",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_geom_tenant_isolation",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_unknown_uuid_returns_404",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_geom.py::test_invalid_tenant_returns_422",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:22Z",
+      "detail": ""
+    }
+  ]
+}

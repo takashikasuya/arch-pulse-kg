@@ -1,0 +1,21 @@
+{
+  "id": "TC-COMP-KG-BIM-LOADER-003",
+  "verifies": [
+    "REQ-SOS-032",
+    "FUN-BIR-001",
+    "FUN-BIR-002",
+    "FUN-BIR-003",
+    "FUN-BIR-004"
+  ],
+  "type": "component",
+  "run_timestamp": "2026-05-20T08:46:26Z",
+  "overall_result": "PASS",
+  "cases": [
+    {
+      "test_id": "tests/component/test_bim_load.py::test_nats_completion_event_published",
+      "result": "PASS",
+      "timestamp": "2026-05-20T08:46:26Z",
+      "detail": ""
+    }
+  ]
+}

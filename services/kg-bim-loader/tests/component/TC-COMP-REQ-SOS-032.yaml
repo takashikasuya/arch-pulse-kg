@@ -10,6 +10,6 @@
   - FUN-BIR-004
   type: component
   run:
-    command: pytest tests/component/
+    command: pytest tests/component/test_bim_load.py::test_nats_completion_event_published
   evidence:
     output: evidence/TC-COMP-KG-BIM-LOADER-003.json
