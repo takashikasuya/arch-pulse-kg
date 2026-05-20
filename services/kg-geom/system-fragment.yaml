@@ -9,8 +9,11 @@ parent_architecture_repo:
 part_of_soi:
 - SOI-KG
 implements:
-  requirements: []
-  functions: []
+  requirements:
+  - REQ-SOS-005
+  - REQ-SOS-026
+  functions:
+  - FUN-BIR-001
 interfaces:
   provides:
   - IF-KG-002

@@ -1,0 +1,41 @@
+# IFC Pset property → RDF predicate mapping (limited list; unmapped Psets are silently dropped)
+# Prefer rec:/brick: predicates where a simple literal form exists; bir: supplements the rest.
+namespaces:
+  rec:   https://w3id.org/rec/
+  brick: https://brickschema.org/schema/Brick#
+  bir:   https://arch-pulse.example/ns/bir#
+  xsd:   http://www.w3.org/2001/XMLSchema#
+
+mappings:
+  - pset: Pset_SpaceCommon
+    prop: IsExternal
+    predicate: bir:isExternal
+    datatype: xsd:boolean
+  - pset: Pset_SpaceCommon
+    prop: GrossFloorArea
+    predicate: bir:hasArea
+    datatype: xsd:decimal
+  - pset: Pset_SpaceCommon
+    prop: NetFloorArea
+    predicate: bir:hasNetArea
+    datatype: xsd:decimal
+  - pset: Pset_SpaceCommon
+    prop: OccupancyNumber
+    predicate: bir:occupancyNumber
+    datatype: xsd:integer
+  - pset: Pset_BuildingCommon
+    prop: NumberOfStoreys
+    predicate: rec:levelNumber
+    datatype: xsd:integer
+  - pset: AssetTagging
+    prop: AssetTag
+    predicate: rec:assetTag
+    datatype: xsd:string
+  - pset: AssetTagging
+    prop: SerialNumber
+    predicate: rec:serialNumber
+    datatype: xsd:string
+  - pset: AssetTagging
+    prop: ModelNumber
+    predicate: rec:modelNumber
+    datatype: xsd:string

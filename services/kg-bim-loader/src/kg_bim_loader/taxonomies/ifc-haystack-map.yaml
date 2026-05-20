@@ -1,0 +1,55 @@
+# IFC class → {bir kind, SBCO/REC/Brick rdf_types, haystack tags}
+# rdf_types are secondary rdf:type assertions (primary is always bir:Entity)
+namespaces:
+  rec:   https://w3id.org/rec/
+  brick: https://brickschema.org/schema/Brick#
+
+mappings:
+  IfcSite:
+    kind: site
+    rdf_types: [rec:Site]
+    tags: [haystack:site]
+  IfcBuilding:
+    kind: building
+    rdf_types: [rec:Building]
+    tags: [haystack:building]
+  IfcBuildingStorey:
+    kind: floor
+    rdf_types: [rec:Level]
+    tags: []
+  IfcSpace:
+    kind: space
+    rdf_types: [rec:Room]
+    tags: [haystack:space]
+  IfcZone:
+    kind: zone
+    rdf_types: [rec:Zone]
+    tags: []
+  IfcAirHandlingUnit:
+    kind: device
+    rdf_types: [brick:Equipment]
+    tags: [haystack:ahu, haystack:hvac]
+  IfcChiller:
+    kind: device
+    rdf_types: [brick:Equipment]
+    tags: [haystack:chiller, haystack:hvac]
+  IfcBoiler:
+    kind: device
+    rdf_types: [brick:Equipment]
+    tags: [haystack:boiler, haystack:hvac]
+  IfcPump:
+    kind: device
+    rdf_types: [brick:Equipment]
+    tags: [haystack:pump]
+  IfcFan:
+    kind: device
+    rdf_types: [brick:Equipment]
+    tags: [haystack:fan]
+  IfcMeter:
+    kind: device
+    rdf_types: [brick:Equipment]
+    tags: [haystack:meter]
+  IfcSensor:
+    kind: point
+    rdf_types: [brick:Point]
+    tags: [haystack:point, haystack:sensor]

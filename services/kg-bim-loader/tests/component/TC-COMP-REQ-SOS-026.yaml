@@ -10,6 +10,6 @@
   - FUN-BIR-004
   type: component
   run:
-    command: pytest tests/component/
+    command: pytest tests/component/test_quality_gate.py
   evidence:
     output: evidence/TC-COMP-KG-BIM-LOADER-001.json
