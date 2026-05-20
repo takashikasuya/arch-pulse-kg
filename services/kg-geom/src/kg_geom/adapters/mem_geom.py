@@ -17,16 +17,17 @@ def _extract_uuid(bir_id: str) -> str:
 
 class MemGeomRepository(GeomRepository):
     def __init__(self) -> None:
-        self._store: dict[str, GeomRecord] = {}  # uuid → record
+        self._store: dict[tuple[str, str], GeomRecord] = {}  # (tid, uuid) → record
 
     def write(self, record: GeomRecord) -> None:
-        key = _extract_uuid(record.bir_id)
+        key = (record.tid, _extract_uuid(record.bir_id))
         self._store[key] = record
 
-    def get(self, uuid: str) -> GeomRecord | None:
-        return self._store.get(uuid)
+    def get(self, uuid: str, tid: str) -> GeomRecord | None:
+        return self._store.get((tid, uuid))
 
     def lookup_space_by_point(self, tid: str, x: float, y: float, z: float) -> str | None:
+        # z is accepted for future 3D floor-filtering; current impl is 2D projected
         pt = Point(x, y)
         for rec in self._store.values():
             if rec.tid != tid or rec.geom_type != "polygon":
@@ -48,6 +49,6 @@ class MemGeomRepository(GeomRepository):
                 centroid = shape(rec.geom).centroid
                 if pt.distance(centroid) <= radius_m:
                     results.append(rec.bir_id)
-            except Exception:
+            except (ValueError, AttributeError):
                 pass
         return results

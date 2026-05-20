@@ -8,73 +8,37 @@
     "FUN-BIR-004"
   ],
   "type": "component",
-  "run_timestamp": "2026-05-20T08:23:04Z",
+  "run_timestamp": "2026-05-20T08:46:26Z",
   "overall_result": "PASS",
   "cases": [
     {
       "test_id": "tests/component/test_bim_load.py::test_ifc_space_maps_to_bir_space",
       "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
+      "timestamp": "2026-05-20T08:46:26Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bim_load.py::test_ifc_ahu_maps_to_bir_device",
       "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
+      "timestamp": "2026-05-20T08:46:26Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bim_load.py::test_bir_id_is_uuid_v5_from_guid",
       "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
+      "timestamp": "2026-05-20T08:46:26Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bim_load.py::test_pipeline_writes_to_kg_store",
       "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
+      "timestamp": "2026-05-20T08:46:26Z",
       "detail": ""
     },
     {
       "test_id": "tests/component/test_bim_load.py::test_nats_completion_event_published",
       "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
-      "detail": ""
-    },
-    {
-      "test_id": "tests/component/test_quality_gate.py::test_good_ifc_passes",
-      "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
-      "detail": ""
-    },
-    {
-      "test_id": "tests/component/test_quality_gate.py::test_sliver_face_rejected",
-      "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
-      "detail": ""
-    },
-    {
-      "test_id": "tests/component/test_quality_gate.py::test_reversed_normals_rejected",
-      "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
-      "detail": ""
-    },
-    {
-      "test_id": "tests/component/test_quality_gate.py::test_gap_detected",
-      "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
-      "detail": ""
-    },
-    {
-      "test_id": "tests/component/test_quality_gate.py::test_missing_guid_rejected",
-      "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
-      "detail": ""
-    },
-    {
-      "test_id": "tests/component/test_quality_gate.py::test_report_json_written",
-      "result": "PASS",
-      "timestamp": "2026-05-20T08:23:04Z",
+      "timestamp": "2026-05-20T08:46:26Z",
       "detail": ""
     }
   ]

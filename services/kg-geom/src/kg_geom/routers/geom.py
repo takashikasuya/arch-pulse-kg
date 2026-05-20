@@ -7,6 +7,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 from pydantic import BaseModel
+from typing import Literal
 
 router = APIRouter(prefix="/geom")
 
@@ -32,7 +33,7 @@ def _etag(bir_id: str, geom: dict) -> str:
 class WriteGeomRequest(BaseModel):
     bir_id: str
     tid: str
-    geom_type: str
+    geom_type: Literal["point", "polygon"]
     geom: dict[str, Any]
     altitude_m: float = 0.0
     space_bir_id: str | None = None
@@ -57,11 +58,18 @@ def write_geometry(body: WriteGeomRequest, request: Request):
 
 
 @router.get("/{uuid}")
-def get_geometry(uuid: str, request: Request, response: Response, lod: str | None = None):
+def get_geometry(
+    uuid: str,
+    request: Request,
+    response: Response,
+    tid: str = Query(...),
+    lod: str | None = None,  # reserved: LOD rendering not yet implemented
+):
+    _validate_tenant(tid)
     if not _UUID_RE.match(uuid):
         raise HTTPException(422, detail="Invalid UUID format")
     repo = request.app.state.repo
-    record = repo.get(uuid)
+    record = repo.get(uuid, tid)
     if record is None:
         raise HTTPException(404, detail="Geometry not found")
     tag = _etag(record.bir_id, record.geom)
@@ -70,11 +78,12 @@ def get_geometry(uuid: str, request: Request, response: Response, lod: str | Non
 
 
 @router.head("/{uuid}")
-def head_geometry(uuid: str, request: Request, response: Response):
+def head_geometry(uuid: str, request: Request, response: Response, tid: str = Query(...)):
+    _validate_tenant(tid)
     if not _UUID_RE.match(uuid):
         raise HTTPException(422, detail="Invalid UUID format")
     repo = request.app.state.repo
-    record = repo.get(uuid)
+    record = repo.get(uuid, tid)
     if record is None:
         raise HTTPException(404, detail="Geometry not found")
     response.headers["ETag"] = _etag(record.bir_id, record.geom)

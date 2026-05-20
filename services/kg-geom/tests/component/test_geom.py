@@ -52,7 +52,7 @@ def test_write_and_get_geometry(client):
     r = _write_polygon(client)
     assert r.status_code == 201, r.text
 
-    r = client.get(f"/geom/{_POLY_UUID}")
+    r = client.get(f"/geom/{_POLY_UUID}", params={"tid": TENANT_A})
     assert r.status_code == 200, r.text
     assert "ETag" in r.headers
     assert r.json()["type"] == "Polygon"
@@ -61,7 +61,7 @@ def test_write_and_get_geometry(client):
 def test_head_returns_etag(client):
     """HEAD /geom/{uuid} returns ETag without body (IF-KG-002)."""
     _write_polygon(client)
-    r = client.head(f"/geom/{_POLY_UUID}")
+    r = client.head(f"/geom/{_POLY_UUID}", params={"tid": TENANT_A})
     assert r.status_code == 200
     assert "ETag" in r.headers
 
@@ -111,7 +111,7 @@ def test_geom_tenant_isolation(client):
 
 def test_unknown_uuid_returns_404(client):
     """GET /geom/{uuid} for unknown UUID returns 404."""
-    r = client.get("/geom/ffffffff-ffff-ffff-ffff-ffffffffffff")
+    r = client.get("/geom/ffffffff-ffff-ffff-ffff-ffffffffffff", params={"tid": TENANT_A})
     assert r.status_code == 404
 
 

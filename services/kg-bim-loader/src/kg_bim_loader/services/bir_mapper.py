@@ -1,7 +1,6 @@
 """BIR mapping service — converts IfcEntity to BIR Turtle using SBCO/REC/Brick ontology."""
 from __future__ import annotations
 from functools import lru_cache
-from pathlib import Path
 import importlib.resources
 import yaml
 
@@ -11,13 +10,6 @@ from ..domain.ifc_model import IfcEntity
 _BIR_NS = "https://arch-pulse.example/ns/bir#"
 _REC_NS = "https://w3id.org/rec/"
 _BRICK_NS = "https://brickschema.org/schema/Brick#"
-
-_NS_MAP = {
-    "rec:": _REC_NS,
-    "brick:": _BRICK_NS,
-    "bir:": _BIR_NS,
-    "xsd:": "http://www.w3.org/2001/XMLSchema#",
-}
 
 
 @lru_cache(maxsize=1)

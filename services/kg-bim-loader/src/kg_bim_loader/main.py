@@ -4,6 +4,9 @@ Exit codes:
   0 — success
   1 — quality gate failure
   2 — other error (I/O, network, etc.)
+
+NOTE: Production use requires replacing MockIfcParser with an IfcOpenShellParser adapter.
+This stub intentionally refuses to load when no real parser is wired (see --dry-run below).
 """
 from __future__ import annotations
 import sys
@@ -21,7 +24,12 @@ def cli(argv: list[str] | None = None) -> None:
     parser.add_argument("--ifc", type=Path, required=True, help="Path to IFC file")
     parser.add_argument("--tenant", required=True, help="Tenant URN")
     parser.add_argument("--kg-store-url", default="http://localhost:8000", help="CS-KG-STORE base URL")
-    parser.add_argument("--report", type=Path, default=None, help="Quality report output path")
+    parser.add_argument("--report", type=Path, default=None, help="Quality report output path (written on failure)")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Parse and quality-check only; do not write to KG-STORE",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -30,7 +38,8 @@ def cli(argv: list[str] | None = None) -> None:
         print(f"Error reading IFC file: {e}", file=sys.stderr)
         sys.exit(2)
 
-    # In production, replace MockIfcParser with IfcOpenShellParser adapter
+    # TODO: replace MockIfcParser with IfcOpenShellParser when ifcopenshell is available.
+    # Until then, bim-loader operates in quality-check-only mode (0 entities parsed).
     ifc_parser = MockIfcParser([])
     kg_store = HttpKgStorePort(args.kg_store_url)
     publisher = NullPublisher()
@@ -44,6 +53,9 @@ def cli(argv: list[str] | None = None) -> None:
 
     if not result.quality_passed:
         print("Quality gate FAILED", file=sys.stderr)
+        if args.report and result.quality_result is not None:
+            result.quality_result.write_report(args.report)
+            print(f"Report written to: {args.report}", file=sys.stderr)
         sys.exit(1)
 
     print(f"Loaded {result.total_entities} entities.")

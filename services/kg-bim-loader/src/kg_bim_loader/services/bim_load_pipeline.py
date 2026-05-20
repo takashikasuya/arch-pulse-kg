@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from ..ports.ifc_parser import IfcParser
 from ..ports.kg_store import KgStorePort
 from ..ports.events import ChangeEventPublisher
+from ..domain.quality_result import QualityResult
 from .quality_gate import QualityGateService
 from .bir_mapper import BirMappingService
 
@@ -14,6 +15,7 @@ from .bir_mapper import BirMappingService
 class LoadResult:
     total_entities: int
     quality_passed: bool
+    quality_result: QualityResult | None = None
 
 
 class BimLoadPipeline:
@@ -33,7 +35,7 @@ class BimLoadPipeline:
         entities = self._parser.parse(data)
         quality = self._gate.run(entities)
         if not quality.passed:
-            return LoadResult(total_entities=len(entities), quality_passed=False)
+            return LoadResult(total_entities=len(entities), quality_passed=False, quality_result=quality)
 
         for entity in entities:
             turtle = self._mapper.to_turtle(entity, tenant_id)

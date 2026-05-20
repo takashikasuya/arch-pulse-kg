@@ -18,7 +18,7 @@ class PostgresGeomRepository(GeomRepository):
     def write(self, record: GeomRecord) -> None:
         raise NotImplementedError("Use async write_async in production context")
 
-    def get(self, uuid: str) -> GeomRecord | None:
+    def get(self, uuid: str, tid: str) -> GeomRecord | None:
         raise NotImplementedError("Use async get_async in production context")
 
     def lookup_space_by_point(self, tid: str, x: float, y: float, z: float) -> str | None:

@@ -49,9 +49,21 @@ def pytest_runtest_logreport(report: pytest.TestReport) -> None:
 
 
 _EVIDENCE_IDS = [
-    ("TC-COMP-KG-BIM-LOADER-001", ["REQ-SOS-026", "FUN-BIR-001", "FUN-BIR-002", "FUN-BIR-003", "FUN-BIR-004"]),
-    ("TC-COMP-KG-BIM-LOADER-002", ["REQ-SOS-028", "FUN-BIR-001", "FUN-BIR-002", "FUN-BIR-003", "FUN-BIR-004"]),
-    ("TC-COMP-KG-BIM-LOADER-003", ["REQ-SOS-032", "FUN-BIR-001", "FUN-BIR-002", "FUN-BIR-003", "FUN-BIR-004"]),
+    (
+        "TC-COMP-KG-BIM-LOADER-001",
+        ["REQ-SOS-026", "FUN-BIR-001", "FUN-BIR-002", "FUN-BIR-003", "FUN-BIR-004"],
+        "test_quality_gate",
+    ),
+    (
+        "TC-COMP-KG-BIM-LOADER-002",
+        ["REQ-SOS-028", "FUN-BIR-001", "FUN-BIR-002", "FUN-BIR-003", "FUN-BIR-004"],
+        "test_bim_load",
+    ),
+    (
+        "TC-COMP-KG-BIM-LOADER-003",
+        ["REQ-SOS-032", "FUN-BIR-001", "FUN-BIR-002", "FUN-BIR-003", "FUN-BIR-004"],
+        "test_nats_completion_event_published",
+    ),
 ]
 
 
@@ -62,9 +74,12 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
         os.path.join(os.path.dirname(__file__), "../../evidence")
     )
     os.makedirs(evidence_dir, exist_ok=True)
-    overall = "PASS" if all(c["result"] == "PASS" for c in _TC_CASES) else "FAIL"
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    for tc_id, verifies in _EVIDENCE_IDS:
+    for tc_id, verifies, pattern in _EVIDENCE_IDS:
+        cases = [c for c in _TC_CASES if pattern in c["test_id"]]
+        if not cases:
+            continue
+        overall = "PASS" if all(c["result"] == "PASS" for c in cases) else "FAIL"
         with open(os.path.join(evidence_dir, f"{tc_id}.json"), "w") as f:
             json.dump(
                 {
@@ -73,7 +88,7 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
                     "type": "component",
                     "run_timestamp": timestamp,
                     "overall_result": overall,
-                    "cases": _TC_CASES,
+                    "cases": cases,
                 },
                 f,
                 indent=2,
