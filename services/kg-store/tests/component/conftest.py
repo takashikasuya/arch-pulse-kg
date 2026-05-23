@@ -8,6 +8,17 @@ from fastapi.testclient import TestClient
 from kg_store.main import create_app
 from kg_store.adapters.pyoxigraph_mem import PyoxigraphMemRepository
 from kg_store.adapters.null_publisher import NullPublisher
+import kg_store.config as _kg_config
+
+_TEST_JWT_SECRET = "test-secret-replace-in-prod-min32b"
+
+
+@pytest.fixture(autouse=True)
+def _inject_tunnel_jwt_secret():
+    original = _kg_config.settings.tunnel_jwt_secret
+    _kg_config.settings.tunnel_jwt_secret = _TEST_JWT_SECRET
+    yield
+    _kg_config.settings.tunnel_jwt_secret = original
 
 
 @pytest.fixture()

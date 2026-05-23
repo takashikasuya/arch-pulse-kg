@@ -41,6 +41,7 @@ async def search_datasets(
 ) -> Response:
     repo = request.app.state.repo
     accept = request.headers.get("accept", "application/json")
+    want_rdf = "application/ld+json" in accept or "text/turtle" in accept
 
     filters: list[str] = []
     if tenant:
@@ -55,24 +56,34 @@ async def search_datasets(
         except Exception:
             raise HTTPException(400, "Invalid bir_id filter value")
 
-    results, g = await _query_datasets(repo, filters)
+    results, g = await _query_datasets(repo, filters, build_graph=want_rdf)
 
-    if "application/ld+json" in accept or "text/turtle" in accept:
+    if want_rdf:
         return _graph_response(g, accept)
     return JSONResponse(results)
 
 
-async def _query_datasets(repo, filters: list[str]) -> tuple[list[dict], rdflib.Graph]:
+async def _query_datasets(
+    repo,
+    filters: list[str],
+    build_graph: bool = False,
+) -> tuple[list[dict], rdflib.Graph | None]:
     filter_block = "\n        ".join(filters)
     sparql = f"""
     PREFIX dcat: <{_DCAT_NS}>
-    SELECT ?ds ?tenantScope ?dataClass ?optInJobId ?byteSize WHERE {{
+    SELECT ?ds ?tenantScope ?dataClass ?optInJobId ?byteSize ?license ?dist ?accessURL ?mediaType WHERE {{
         GRAPH <{_CATALOG_GRAPH}> {{
             ?ds a dcat:Dataset ;
                 <{_BIR_NS}tenantScope>  ?tenantScope ;
                 <{_BIR_NS}dataClass>   ?dataClass ;
                 <{_BIR_NS}optInJobId>  ?optInJobId ;
                 <{_DCAT_NS}byteSize>   ?byteSize .
+            OPTIONAL {{ ?ds <{_DCT_NS}license> ?license }}
+            OPTIONAL {{
+                ?ds <{_DCAT_NS}distribution> ?dist .
+                OPTIONAL {{ ?dist <{_DCAT_NS}accessURL> ?accessURL }}
+                OPTIONAL {{ ?dist <{_DCAT_NS}mediaType> ?mediaType }}
+            }}
             {filter_block}
         }}
     }}
@@ -80,10 +91,12 @@ async def _query_datasets(repo, filters: list[str]) -> tuple[list[dict], rdflib.
     raw = await repo.sparql_query(sparql, accept="application/sparql-results+json")
     data = json.loads(raw)
     results = []
-    g = rdflib.Graph()
-    g.bind("dcat", rdflib.Namespace(_DCAT_NS))
-    g.bind("dct", rdflib.Namespace(_DCT_NS))
-    g.bind("bir", rdflib.Namespace(_BIR_NS))
+    g: rdflib.Graph | None = None
+    if build_graph:
+        g = rdflib.Graph()
+        g.bind("dcat", rdflib.Namespace(_DCAT_NS))
+        g.bind("dct", rdflib.Namespace(_DCT_NS))
+        g.bind("bir", rdflib.Namespace(_BIR_NS))
     for b in data.get("results", {}).get("bindings", []):
         ds_uri = b["ds"]["value"]
         results.append({
@@ -93,11 +106,23 @@ async def _query_datasets(repo, filters: list[str]) -> tuple[list[dict], rdflib.
             "opt_in_job_id": b["optInJobId"]["value"],
             "byte_size":     int(b["byteSize"]["value"]),
         })
-        subj = rdflib.URIRef(ds_uri)
-        g.add((subj, rdflib.RDF.type, rdflib.URIRef(f"{_DCAT_NS}Dataset")))
-        g.add((subj, rdflib.URIRef(f"{_BIR_NS}tenantScope"), rdflib.Literal(b["tenantScope"]["value"])))
-        g.add((subj, rdflib.URIRef(f"{_BIR_NS}dataClass"), rdflib.Literal(b["dataClass"]["value"])))
-        g.add((subj, rdflib.URIRef(f"{_DCAT_NS}byteSize"), rdflib.Literal(int(b["byteSize"]["value"]))))
+        if g is not None:
+            subj = rdflib.URIRef(ds_uri)
+            g.add((subj, rdflib.RDF.type, rdflib.URIRef(f"{_DCAT_NS}Dataset")))
+            g.add((subj, rdflib.URIRef(f"{_BIR_NS}tenantScope"), rdflib.Literal(b["tenantScope"]["value"])))
+            g.add((subj, rdflib.URIRef(f"{_BIR_NS}dataClass"), rdflib.Literal(b["dataClass"]["value"])))
+            g.add((subj, rdflib.URIRef(f"{_DCAT_NS}byteSize"), rdflib.Literal(int(b["byteSize"]["value"]))))
+            if "license" in b:
+                g.add((subj, rdflib.URIRef(f"{_DCT_NS}license"), rdflib.URIRef(b["license"]["value"])))
+            if "dist" in b:
+                d = b["dist"]
+                dist_ref = rdflib.BNode(d["value"]) if d["type"] == "bnode" else rdflib.URIRef(d["value"])
+                g.add((subj, rdflib.URIRef(f"{_DCAT_NS}distribution"), dist_ref))
+                g.add((dist_ref, rdflib.RDF.type, rdflib.URIRef(f"{_DCAT_NS}Distribution")))
+                if "accessURL" in b:
+                    g.add((dist_ref, rdflib.URIRef(f"{_DCAT_NS}accessURL"), rdflib.URIRef(b["accessURL"]["value"])))
+                if "mediaType" in b:
+                    g.add((dist_ref, rdflib.URIRef(f"{_DCAT_NS}mediaType"), rdflib.Literal(b["mediaType"]["value"])))
     return results, g
 
 

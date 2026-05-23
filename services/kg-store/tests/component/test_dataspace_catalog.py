@@ -1,10 +1,9 @@
 """Component tests for GET /dataspace/catalog (REQ-SOS-056, TC-COMP-KG-STORE-003)."""
-import json
 import jwt
-import pytest
+
+from tests.component.conftest import _TEST_JWT_SECRET
 
 TENANT_A = "urn:bir:tenant:aaaaaaaa-0000-0000-0000-000000000001"
-_SECRET = "test-secret-replace-in-prod-min32b"
 
 _TUNNEL_HEADERS = {"x-tunnel-source": "cloud-dsc"}
 
@@ -36,7 +35,7 @@ _DS_HIDDEN = {
 
 
 def _make_jwt(tenant_id: str = TENANT_A) -> str:
-    return jwt.encode({"tenant_id": tenant_id, "sub": "cloud-dsc"}, _SECRET, algorithm="HS256")
+    return jwt.encode({"tenant_id": tenant_id, "sub": "cloud-dsc"}, _TEST_JWT_SECRET, algorithm="HS256")
 
 
 def _register_dataset(client, ds: dict) -> None:
