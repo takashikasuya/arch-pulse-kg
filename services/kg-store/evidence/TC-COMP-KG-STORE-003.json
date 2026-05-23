@@ -1,0 +1,47 @@
+{
+  "id": "TC-COMP-KG-STORE-003",
+  "verifies": [
+    "REQ-SOS-056"
+  ],
+  "type": "component",
+  "run_timestamp": "2026-05-23T11:54:46Z",
+  "overall_result": "PASS",
+  "cases": [
+    {
+      "test_id": "tests/component/test_dataspace_catalog.py::test_direct_access_rejected",
+      "result": "PASS",
+      "timestamp": "2026-05-23T11:54:45Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_dataspace_catalog.py::test_missing_jwt_rejected",
+      "result": "PASS",
+      "timestamp": "2026-05-23T11:54:45Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_dataspace_catalog.py::test_jsonld_response",
+      "result": "PASS",
+      "timestamp": "2026-05-23T11:54:45Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_dataspace_catalog.py::test_turtle_response",
+      "result": "PASS",
+      "timestamp": "2026-05-23T11:54:45Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_dataspace_catalog.py::test_exposed_only_filtered",
+      "result": "PASS",
+      "timestamp": "2026-05-23T11:54:45Z",
+      "detail": ""
+    },
+    {
+      "test_id": "tests/component/test_dataspace_catalog.py::test_catalog_datasets_jsonld_negotiation",
+      "result": "PASS",
+      "timestamp": "2026-05-23T11:54:45Z",
+      "detail": ""
+    }
+  ]
+}

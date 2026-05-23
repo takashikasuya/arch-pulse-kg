@@ -13,6 +13,7 @@ implements:
   - REQ-SOS-002
   - REQ-SOS-028
   - REQ-SOS-032
+  - REQ-SOS-056
   - REQ-SOS-060
   - REQ-SOS-061
   functions:

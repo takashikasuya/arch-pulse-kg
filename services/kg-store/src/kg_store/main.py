@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from .config import settings
 from .ports.triplestore import TriplestoreRepository
 from .ports.events import ChangeEventPublisher
-from .routers import health, sparql, shacl, bir, catalog, tags
+from .routers import health, sparql, shacl, bir, catalog, tags, dataspace
 from .services.tag_validator import load_haystack_catalog
 
 logger = logging.getLogger(__name__)
@@ -72,6 +72,7 @@ def create_app(
     app.include_router(bir.router)
     app.include_router(catalog.router)
     app.include_router(tags.router)
+    app.include_router(dataspace.router)
     return app
 
 

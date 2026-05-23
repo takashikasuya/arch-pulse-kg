@@ -1,0 +1,11 @@
+# コンポーネントテスト: REQ-SOS-056
+
+- id: TC-COMP-KG-STORE-003
+  title: REQ-SOS-056 実装検証 — DCAT exposure + tunnel-only アクセス制御
+  verifies:
+  - REQ-SOS-056
+  type: component
+  run:
+    command: pytest tests/component/test_dataspace_catalog.py
+  evidence:
+    output: evidence/TC-COMP-KG-STORE-003.json

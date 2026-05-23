@@ -47,6 +47,10 @@ class DcatDataset(BaseModel):
     bucket: str | None = None
     aggregation_functions: list[str] | None = None
     backend_hint: str | None = None
+    exposed: bool = False
+    access_url: str | None = None
+    media_type: str | None = None
+    license_url: str | None = None
 
 
 class ShaclValidationResult(BaseModel):
