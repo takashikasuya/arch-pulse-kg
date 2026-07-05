@@ -1,5 +1,8 @@
 # arch-pulse-kg
 
+> ⚠️ **このリポジトリはアーカイブされました（2026-07、モノレポ化 ADR-028 / building-os-ecosystem#108）。**
+> 実装は **[building-os-ecosystem/impl/kg](https://github.com/takashikasuya/building-os-ecosystem/tree/master/impl/kg)** に履歴ごと集約されました。以後の開発・Issue はモノレポ側で行ってください。
+
 > Mono-repo で内包する複数の CS（Constituent System）の実装を保持する。
 > 親アーキテクチャ正本: [takashikasuya/building-os-ecosystem](https://github.com/takashikasuya/building-os-ecosystem)
 > 関連 ADR: [ADR-009 CS↔Repository N:1 mapping](https://github.com/takashikasuya/building-os-ecosystem/blob/main/docs/adr/ADR-009-cs-repository-realization-mapping.md)
